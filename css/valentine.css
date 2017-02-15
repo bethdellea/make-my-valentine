@@ -5,6 +5,7 @@
 /* -------------------------------------------------------------- */
 /* Fonts */
 
+
 /* -------------------------------------------------------------- */
 /* Framing Styles */
 
@@ -26,7 +27,7 @@ body {
 }
 
 .font-CS {
-    font-family: 'Comic Sans', cursive, sans-serif; 
+    font-family: 'Comic Sans MS', cursive, sans-serif; 
 }
 
 .font-Papyrus {
@@ -110,7 +111,7 @@ button:hover{
     height: 500px;
     overflow-y: auto;
     background-color: rgba(150, 150, 150, .6);
-    padding: 3px;
+    padding: 8px;
 }
 
 #justify p{
@@ -148,4 +149,8 @@ button:hover{
     margin-left:auto;
     margin-right: auto;
     margin-top: 55px;
+}
+
+.hidden{
+    display: none;
 }

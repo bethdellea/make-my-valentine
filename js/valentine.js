@@ -1,7 +1,7 @@
 /*
     canvas-animation.js
     
-    my lovely fish tankkkkkkkk
+    my lovely valentine makerrrrrrrrr
     
 */
 
@@ -51,7 +51,7 @@ function canvasApp() {
     var bgIdx;
     var backgrounds = [];
     var images = [];
-    
+    //var messages = [];
     var bgSources = [
         "./images/bgs/color1.png",
         "./images/bgs/color2.png",
@@ -101,15 +101,7 @@ function canvasApp() {
         "./images/clips/romance13.png",
         "./images/clips/romance14.png",
         "./images/clips/romance15.png",
-        "./images/clips/romance16.png",
         "./images/clips/romance17.png",
-        "./images/clips/romance18.png",
-        "./images/clips/romance19.png",
-        "./images/clips/romance20.png",
-        "./images/clips/romance21.png",
-        "./images/clips/romance22.png",
-        "./images/clips/romance23.png",
-        "./images/clips/romance24.png",
         "./images/clips/romance25.png",
         "./images/clips/romance26.png",
         "./images/clips/romance27.png",
@@ -120,11 +112,10 @@ function canvasApp() {
 
     ]
 
-    var fishes = [];
-    
-    var numFish = 1; //the number that will appear
-    
-    var foodPellets = [];
+    var decs = [];
+    var msgs = [];
+    var numDecs = 1; //the number that will appear
+    var numMsgs = 0;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
     
     // loadImages()
@@ -174,11 +165,11 @@ function canvasApp() {
     //function for getting a random number with in a range	
     function getRandom (min, max) {
         returnable = Math.floor( Math.random() * (max - min) + min );
-        while(returnable == 0){
+       /* while(returnable == 0){
             //edited because 0 movemet in x or y was annoying me
             //generates new numbers until the number generated is no longer 0
           returnable = Math.floor( Math.random() * (max - min) + min );  
-        }
+        } */
         return returnable;
     }//getRandom
 
@@ -204,143 +195,85 @@ function canvasApp() {
         
         //clear the canvas
         clearCanvas(  );
-        for (var i = 0; i < fishes.length; i++){
+        for (var i = 0; i < decs.length; i++){
 
-            fishes[i].drawSelf();
-            fishes[i].swim();
-            if(foodPellets){
-                collide = fishes[i].collisionCheck();
-                if(collide >= 0){
-                    foodPellets.splice(collide, 1);
-                }
-            }
+            decs[i].drawSelf();
+           
+        } //unFortunately this leaves messages always on top of images. it'll do.
+        for (var i = 0; i < msgs.length; i++){
+            msgs[i].drawSelf();
         }
-        if(foodPellets){
-            for (var i = 0; i < foodPellets.length; i++){
-                foodPellets[i].drawSelf();
-                foodPellets[i].moveSelf();
-            }
-            
-        }
-
+        
     } //drawCanvas()
         
     
     
-    //placeFish
-    function makeFish(num2make){
+    //make & place decorations
+    function makeDec(num2make){
         for (var i = 0; i < num2make; i ++){
-            indx = numFish + i;
-            imW=getRandom(50, 130);
-            imH=getRandom(30, 110);
-            imX=canvasWidth/2 + imW/2;//getRandom(0, canvasWidth-imW);
-            imY= 0;//getRandom(0, canvasHeight-imH);
-            mX=getRandom(-3, 3);
-            mY=getRandom(-2, 2);
-            console.log("imX: " + imX + "\timY: " + imY);
-            var fish = {
+            indx = getRandom(0,images.length);
+            imW = getRandom(50, 130);
+            imH = getRandom(30, 110);
+            imX = getRandom(0, canvasWidth-imW);
+            imY = getRandom(0, canvasHeight-imH);
+            var dec = {
                 imgIndex:indx,
                 imgW:imW,
                 imgH:imH,
                 x:imX,
                 y:imY,
-                moveX:mX,
-                moveY:mY,
-                initialCheck: function()
-                {
-                    if(this.moveX < 0){
-                        this.imgIndex += 10;
-                    }
-                    
-                },
+               
                 drawSelf: function()
                 {
                     context.drawImage(images[this.imgIndex], this.x, this.y, this.imgW, this.imgH);
-                    
-                },
-            
-                swim: function()
-                {
-                    if(this.x + this.imgW + this.moveX > canvasWidth){
-                        this.imgIndex += 10;
-                        this.moveX *= -1;
-                        console.log("image index: " + this.imgIndex);                        
-                    }
-                    if( this.x + this.moveX < 0){
-                        this.imgIndex -= 10;
-                        console.log("image index: " + this.imgIndex);
-                        this.moveX *= -1;
-                    }
-                    if(this.y + this.imgH + this.moveY > canvasHeight || this.y + this.moveY < 0){
-                        this.moveY *= -1;
-                    }
-                    this.x += this.moveX;
-                    this.y += this.moveY;
-                },
-                collisionCheck: function(){
-                    //collision detection code
-                    for(var i = 0; i < foodPellets.length; i++){
-                        if ((foodPellets[i].x >= this.x) && (this.x + this.imgW >= foodPellets[i].x + foodPellets[i].r) && (this.y <= foodPellets[i].y) && (this.y + this.imgH >= foodPellets[i].y + foodPellets[i].r)){
-                            if(this.imgH < canvasHeight/3 && this.imgW < canvasWidth/3){
-                                this.imgH ++;
-                                this.imgW++;
-                            }
-                        return i;
-                        }
-                    }
-                   return -1;
                 }
-                
-            }
-            fish.initialCheck(); //make sure it's facing its move direction
-            fishes.push(fish);
+            }            
+            decs.push(dec);
         }
     
     }
     
-    function makeFood(){
-        var foodcolor = ["rgba(212,191,144,.9)", "rgba(111, 201, 144, .9)", "rgba(200, 221, 182, .9)"]
-        //create the food pellets
-        for (var i = 0; i < 6; i++){
-            imX=canvasWidth/2; //getRandom(0, canvasWidth-imW);
-            imY= 0;//getRandom(0, canvasHeight-imH);
-            imR = getRandom(2, 5);
-            mX= (Math.random() * 10) % 5 - i;
-            mY= getRandom(0,3);
-            var food = {
-                colornum:i,
-                movX:mX,
-                r:imR,
-                x:imX,
-                y:imY,
-                movY:mY,
-                drawSelf: function(){
-                    context.beginPath();
-                    context.arc(this.x, this.y, this.r*2, 0, Math.PI*2);
-                    context.fillStyle = foodcolor[this.colornum % foodcolor.length];
-                    context.fill();
-                    context.closePath();
-                },
-                moveSelf: function(){
-                    if(this.x + this.movX - this.r*2 > 0 && this.x + this.movX + this.r*2 < canvasWidth){
-                        this.x+= this.movX;
-                    } else{
-                        this.movX = 0;
-                    }
-                   if(this.y + this.movY + this.r * 2 < canvasHeight){
-                       this.y += this.movY;
-                   }
-                    else{
-                        this.movY = 0;
-                        this.movX = 0;
-                    }
+    function makeMsg(msg){
+        //get message color
+        //get message font size
+        //idk what else
+        var r = getRandom(0, 255);
+        var g = getRandom(0, 255);
+        var b = getRandom(0, 255);
+        var color = "rgb("+r+","+g+","+b+")";
+        var lum = (0.2126*r + 0.7152*g + 0.0722*b);
+        if(lum > .5){ var shadow = "#3a3a3a";}
+        else{
+            var shadow = "#aaa";
+        }
+        var size = getRandom(25, 100);
+        var message = {
+            msgCol: color,
+            msgShadow: shadow,
+            msgSz: size,
+            text: msg,
+            x: getRandom(0, canvasWidth - context.measureText(this.text).width + 6),
+            y: getRandom(55, canvasHeight-15),
+            getWidth: function(){
+              var txtWdth =  context.measureText(this.text).width;
+                if(this.x + txtWdth > canvasWidth){
+                    this.x = canvasWidth - txtWdth - 3;
                 }
+            },
+            drawSelf: function(){
+                context.font = this.msgSz + "px Comic Sans MS";
+                context.fillStyle = this.msgShadow;
+                this.getWidth();
+                context.fillText(this.text, this.x+2, this.y+2);
+                context.fillStyle = this.msgCol;
+                context.fillText(this.text, this.x, this.y);
                 
             }
-            foodPellets.push(food);
         }
+        msgs.push(message);
+        
+        
     }
-
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
     /* Game Loop */
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -363,35 +296,65 @@ function canvasApp() {
     });
     loadImages(images, imageSources, function(images){
         var numFrame = 0;
-    //start the game loop
-         makeFish(numFish);
-        gameLoop();
+        drawCanvas();
+        //gameLoop();
     });
     
     // event listeners
-    feedFish.addEventListener("click", eventFeedFish,true);
-    addFish.addEventListener("click",eventAddFish, true);
-    remFish.addEventListener("click", eventRemFish, true);
+    addDec.addEventListener("click",eventAddDec, true);
+    remDec.addEventListener("click", eventRemDec, true);
+    addMsg.addEventListener("click", eventAddMsg, true);
+    remMsg.addEventListener("click", eventRemMsg, true);
+    saveCanvas.addEventListener("click", eventSavePic, true);
+    editMore.addEventListener("click", eventMoreEdits, true);
     
+    function eventSavePic( e ){
+        
+        var img = theCanvas.toDataURL("image/png");
+       
 
-    function eventFeedFish( e ) {
-        
-        makeFood();
-        
+        window.open( img,   '_blank' );
+
+
+        theCanvas.classList.add("hidden");
+        saveCanvas.classList.add("hidden");
     }
     
-    function eventAddFish( e ){
-        if(numFish < 10){
-            numFish ++;
-            makeFish(1);
+    function eventMoreEdits( e ){
+        
+        theCanvas.classList.remove("hidden");
+        saveCanvas.classList.remove("hidden");
+        editMore.classList.add("hidden");
+    }
+    
+    function eventAddMsg( e ){
+        numMsgs++;
+        var mess = document.getElementById("valMsg").value;
+        makeMsg(mess);
+        drawCanvas();
+    }
+    
+    function eventRemMsg( e ){
+        if(numMsgs > 0){
+            msgs.pop();
+            numMsgs--;
+            drawCanvas()
         }
         
     }
     
-    function eventRemFish( e ){
-        if(numFish > 0){
-            fishes.pop();
-            numFish --;
+    function eventAddDec( e ){
+            numDecs++;
+            makeDec(1);
+            drawCanvas();
+        
+    }
+    
+    function eventRemDec( e ){
+        if(numDecs > 0){
+            decs.pop();
+            numDecs --;
+            drawCanvas();
         }
         
     }
